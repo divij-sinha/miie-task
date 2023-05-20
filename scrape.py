@@ -66,10 +66,10 @@ if __name__ == "__main__":
     page_url = (
         "https://www.classmates.com/yearbooks/Alameda-High-School/4182755124?page=1"
     )
-    headers = {}
-    headers[
-        "User-Agent"
-    ] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+    }
     cur_session = session()
     cur_session.headers = headers
     cur_session = login(cur_session, page_url)
@@ -79,9 +79,15 @@ if __name__ == "__main__":
     school = {"name": "Alameda High School", "year": "2010"}
     page = 0
     limit = 100
+    api_base = "https://www.classmates.com/node/api/yearbookPages/"
     while True:
-        api_url = f"https://www.classmates.com/node/api/yearbookPages?limit={limit}&offset={page*limit}&yearbookId=4182755124&_={str(time.time_ns())}"
-        api_resp = cur_session.get(api_url)
+        api_params = {
+            "limit": limit,
+            "offset": page * limit,
+            "yearbookId": "4182755124",
+            "_": str(time.time_ns()),
+        }
+        api_resp = cur_session.get(api_base, params=api_params)
         if not api_resp.status_code == 200:
             break
         print(f"saving pages {(page*limit)+1} to {(page+1)*limit}")
